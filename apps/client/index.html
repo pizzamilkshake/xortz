@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111923" />
+    <title>Turnbound · Tactical Artillery</title>
+  </head>
+  <body>
+    <div id="app">
+      <div id="game-backdrop" aria-hidden="true"></div>
+      <main class="shell">
+        <section class="panel home-panel" id="home-screen">
+          <div class="brand-mark" aria-hidden="true">T</div>
+          <p class="eyebrow">TACTICAL ARTILLERY · 1V1</p>
+          <h1>Turnbound</h1>
+          <p class="lede">Take the high ground. Watch the wind. Make every shot count.</p>
+          <div class="home-actions">
+            <label class="control-label name-label" for="player-name">Your name
+              <input id="player-name" name="player-name" type="text" autocomplete="nickname" maxlength="20" placeholder="Enter your name" required />
+            </label>
+            <button class="button button-primary" id="create-lobby">Create a lobby</button>
+            <form id="join-form" class="join-form">
+              <label class="field-label" for="room-code">Have an invite code?</label>
+              <div class="join-row">
+                <input id="room-code" name="room-code" autocomplete="off" spellcheck="false" placeholder="Enter room code" required />
+                <button class="button button-secondary" type="submit">Join</button>
+              </div>
+            </form>
+          </div>
+          <section class="open-lobbies" aria-labelledby="open-lobbies-title">
+            <div class="lobby-list-heading">
+              <div>
+                <span class="field-label">PUBLIC ROOMS</span>
+                <h2 id="open-lobbies-title">Open lobbies</h2>
+              </div>
+              <button class="button button-small button-secondary" id="refresh-lobbies" type="button">Refresh</button>
+            </div>
+            <p class="lobby-list-status" id="lobby-list-status" role="status" aria-live="polite">Connecting to lobby browser…</p>
+            <div class="lobby-list" id="open-lobby-list"></div>
+          </section>
+          <p class="feedback" id="home-feedback" role="status" aria-live="polite"></p>
+          <p class="footnote">A room code is shared only with the person you invite.</p>
+        </section>
+
+        <section class="panel lobby-panel" id="lobby-screen" hidden>
+          <div class="lobby-heading">
+            <div>
+              <p class="eyebrow">PRE-MATCH LOBBY</p>
+              <h2>Set the stage</h2>
+            </div>
+            <span class="status-pill" id="lobby-status">Waiting for player</span>
+          </div>
+
+          <div class="invite-card">
+            <div>
+              <span class="field-label">ROOM CODE</span>
+              <strong class="room-code" id="room-code-display">——</strong>
+            </div>
+            <button class="button button-small button-secondary" id="copy-invite" type="button">Copy invite</button>
+          </div>
+
+          <div class="players-grid" id="players-list"></div>
+
+          <div class="settings-block">
+            <div class="section-heading">
+              <div>
+                <span class="field-label">MATCH SETTINGS</span>
+                <h3>Choose your rules</h3>
+              </div>
+              <span class="host-badge" id="host-note">HOST CONTROLS</span>
+            </div>
+            <div class="settings-grid">
+              <label class="control-label" for="map-select">Map
+                <select id="map-select">
+                </select>
+              </label>
+              <label class="control-label" for="timer-select">Turn timer
+                <select id="timer-select">
+                  <option value="30">30 seconds</option>
+                  <option value="60" selected>60 seconds</option>
+                  <option value="90">90 seconds</option>
+                  <option value="120">2 minutes</option>
+                  <option value="180">3 minutes</option>
+                </select>
+              </label>
+            </div>
+            <p class="helper-text" id="settings-help">Only the host can change settings. Changes clear both players’ readiness.</p>
+          </div>
+
+          <div class="ready-row">
+            <div>
+              <h3 id="ready-heading">Ready when you are</h3>
+              <p id="ready-help">Both players must agree to the current settings.</p>
+            </div>
+            <button class="button button-ready" id="ready-button" type="button" disabled>Ready up</button>
+          </div>
+          <p class="feedback" id="lobby-feedback" role="status" aria-live="polite"></p>
+          <button class="text-button" id="leave-lobby" type="button">Leave lobby</button>
+        </section>
+
+        <section class="battle-overlay" id="match-screen" hidden aria-label="Battlefield">
+          <header class="battle-hud">
+            <div class="hud-card active-turn-card">
+              <span class="field-label">ACTIVE UNIT</span>
+              <div class="active-turn-line"><strong id="active-unit-id">A1</strong><span id="active-player-name">Player A</span></div>
+              <span class="hud-caption" id="match-heading">Waiting for match state</span>
+            </div>
+            <div class="hud-card timer-card">
+              <span class="field-label">TURN LIMIT</span>
+              <strong class="timer-value" id="turn-limit">60<span>s</span></strong>
+              <span class="hud-caption">set in lobby</span>
+            </div>
+            <div class="hud-card wind-card">
+              <div class="wind-heading"><span class="field-label">WIND</span><strong id="wind-readout">— CALM</strong></div>
+              <div class="wind-meter" aria-label="Wind intensity"><span id="wind-meter-fill"></span></div>
+              <span class="hud-caption" id="wind-intensity">No wind</span>
+            </div>
+          </header>
+          <footer class="battle-footer">
+            <div class="turn-order-wrap">
+              <span class="field-label">TURN ORDER</span>
+              <div id="turn-order" class="turn-order"></div>
+            </div>
+            <p>Battlefield scene is ready. Unit movement and weapons are the next implementation step.</p>
+          </footer>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

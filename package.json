@@ -1,0 +1,13 @@
+{
+  "name": "turnbound",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:client": "npm run dev --workspace @turnbound/client",
+    "dev:server": "npm run dev --workspace @turnbound/server",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
