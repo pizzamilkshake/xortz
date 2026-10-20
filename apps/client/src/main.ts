@@ -127,9 +127,21 @@ class LobbyBackdrop extends Phaser.Scene {
     const camera = this.cameras.main;
     camera.setBounds(0, 0, WORLD.width, WORLD.height);
     camera.setZoom(1);
+    // Keep the render canvas fixed, but size the camera viewport to the visible
+    // browser area so a small window can pan across the full map at 1×.
+    const updateCameraViewport = () => {
+      const width = Math.min(WORLD.width, window.innerWidth);
+      const height = Math.min(WORLD.height, window.innerHeight);
+      camera.setViewport((WORLD.width - width) / 2, (WORLD.height - height) / 2, width, height);
+    };
+    updateCameraViewport();
+    camera.centerOn(WORLD.width / 2, WORLD.height / 2);
+    window.addEventListener("resize", updateCameraViewport);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => window.removeEventListener("resize", updateCameraViewport));
 
     // Wheel zooms toward the pointer so the point under the cursor stays in place.
     this.input.on("wheel", (pointer: Phaser.Input.Pointer, _objects: unknown[], _dx: number, deltaY: number) => {
+      pointer.event.preventDefault();
       const before = camera.getWorldPoint(pointer.x, pointer.y);
       const zoom = Phaser.Math.Clamp(camera.zoom * Math.exp(-deltaY * 0.001), 1, 3);
       camera.setZoom(zoom);
@@ -234,7 +246,9 @@ new Phaser.Game({
   width: WORLD.width,
   height: WORLD.height,
   backgroundColor: "#172330",
-  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  // Keep the renderer viewport locked to the 1536×864 world. CSS clips the
+  // fixed-size canvas to the browser window during a match; the camera handles navigation.
+  scale: { mode: Phaser.Scale.NONE },
   scene: [backdropScene],
 });
 

@@ -29,6 +29,8 @@ button:disabled, input:disabled, select:disabled { cursor: not-allowed; opacity:
 #game-backdrop::after { position: absolute; inset: 0; z-index: 1; content: ""; background: linear-gradient(90deg, rgba(11, 18, 26, 0.16), rgba(11, 18, 26, 0.72) 37%, rgba(11, 18, 26, 0.72) 63%, rgba(11, 18, 26, 0.16)), linear-gradient(0deg, rgba(12, 18, 25, 0.4), transparent 36%); }
 #game-backdrop canvas { display: block; width: 100%; height: 100%; opacity: 0.8; }
 #game-backdrop.is-match::after { background: linear-gradient(180deg, rgba(11, 18, 26, 0.12), rgba(11, 18, 26, 0.22)); }
+#game-backdrop.is-match { overflow: hidden; }
+#game-backdrop.is-match canvas { position: absolute; top: 50%; left: 50%; width: 1536px !important; height: 864px !important; max-width: none; transform: translate(-50%, -50%); opacity: 1; }
 
 .shell { display: grid; place-items: center; width: 100%; min-height: 100vh; padding: 36px 20px; }
 .panel { width: min(100%, 580px); padding: 38px 42px; border: 1px solid var(--line); border-radius: 20px; background: var(--panel); box-shadow: 0 28px 90px rgba(0, 0, 0, 0.38); backdrop-filter: blur(18px); }
