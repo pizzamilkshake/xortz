@@ -118,10 +118,42 @@ class LobbyBackdrop extends Phaser.Scene {
   private unitLabels: Phaser.GameObjects.Text[] = [];
   private battleState?: LobbyStateView;
   private ownTeam = "A";
+  private draggingMap = false;
+  private lastPointer = new Phaser.Math.Vector2();
   constructor() { super("lobby-backdrop"); }
 
   create() {
     this.art = this.add.graphics();
+    const camera = this.cameras.main;
+    camera.setBounds(0, 0, WORLD.width, WORLD.height);
+    camera.setZoom(1);
+
+    // Wheel zooms toward the pointer so the point under the cursor stays in place.
+    this.input.on("wheel", (pointer: Phaser.Input.Pointer, _objects: unknown[], _dx: number, deltaY: number) => {
+      const before = camera.getWorldPoint(pointer.x, pointer.y);
+      const zoom = Phaser.Math.Clamp(camera.zoom * Math.exp(-deltaY * 0.001), 1, 3);
+      camera.setZoom(zoom);
+      const after = camera.getWorldPoint(pointer.x, pointer.y);
+      camera.scrollX += before.x - after.x;
+      camera.scrollY += before.y - after.y;
+    });
+
+    // Right or middle mouse drag pans without taking over left-click aiming later.
+    this.input.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (!pointer.rightButtonDown() && !pointer.middleButtonDown()) return;
+      this.draggingMap = true;
+      this.lastPointer.set(pointer.x, pointer.y);
+      pointer.event.preventDefault();
+    });
+    this.input.on("pointerup", () => { this.draggingMap = false; });
+    this.input.on("pointerupoutside", () => { this.draggingMap = false; });
+    this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+      if (!this.draggingMap) return;
+      camera.scrollX -= (pointer.x - this.lastPointer.x) / camera.zoom;
+      camera.scrollY -= (pointer.y - this.lastPointer.y) / camera.zoom;
+      this.lastPointer.set(pointer.x, pointer.y);
+    });
+    this.game.canvas.addEventListener("contextmenu", (event) => event.preventDefault());
     this.drawBattlefield();
   }
 
